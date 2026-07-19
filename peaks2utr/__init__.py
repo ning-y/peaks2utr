@@ -107,6 +107,7 @@ async def _main(args):
     from .preprocess import BAMSplitter, call_peaks, create_db
     from .postprocess import merge_annotations, gt_gff3_sort, write_summary_stats
     from .validation import matching_chr, valid_bam
+    import gffutils
 
     try:
         ###################
@@ -175,7 +176,8 @@ async def _main(args):
             call_peaks(bam_basename, "forward"),
             call_peaks(bam_basename, "reverse")
         )
-        args.gtf_in = db.dialect['fmt'] == 'gtf'
+        # db is a file path string; open it to read the dialect
+        args.gtf_in = gffutils.FeatureDB(db).dialect['fmt'] == 'gtf'
         peaks = \
             BroadPeaksList(broadpeak_fn=cached("forward_peaks.broadPeak"), strand="forward") + \
             BroadPeaksList(broadpeak_fn=cached("reverse_peaks.broadPeak"), strand="reverse")
