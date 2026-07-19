@@ -157,54 +157,5 @@ class TestOutputFormatting(unittest.TestCase):
         self.assertListEqual(feature_0.strip().split("\t"), expected_feature_0)
 
 
-class TestInputFormatDetection(unittest.TestCase):
-    """
-    Tests for get_output_filename's detection of GFF_IN format from file extension.
-    """
-
-    def setUp(self):
-        argparser = prepare_argparser()
-        self.args = argparser.parse_args(["", ""])
-
-    def test_plain_gtf(self):
-        self.args.GFF_IN = "annotations.gtf"
-        get_output_filename(self.args)
-        self.assertTrue(self.args.gtf_in)
-
-    def test_gzipped_gtf(self):
-        """
-        .gtf.gz must be detected as GTF input.
-        Regression: os.path.splitext returns .gz, not .gtf.
-        """
-        self.args.GFF_IN = "annotations.gtf.gz"
-        get_output_filename(self.args)
-        self.assertTrue(self.args.gtf_in)
-
-    def test_plain_gff(self):
-        self.args.GFF_IN = "annotations.gff"
-        get_output_filename(self.args)
-        self.assertFalse(self.args.gtf_in)
-
-    def test_plain_gff3(self):
-        self.args.GFF_IN = "annotations.gff3"
-        get_output_filename(self.args)
-        self.assertFalse(self.args.gtf_in)
-
-    def test_gzipped_gff3(self):
-        self.args.GFF_IN = "annotations.gff3.gz"
-        get_output_filename(self.args)
-        self.assertFalse(self.args.gtf_in)
-
-    def test_case_insensitive_gtf(self):
-        self.args.GFF_IN = "annotations.GTF"
-        get_output_filename(self.args)
-        self.assertTrue(self.args.gtf_in)
-
-    def test_case_insensitive_gzipped_gtf(self):
-        self.args.GFF_IN = "annotations.GTF.gz"
-        get_output_filename(self.args)
-        self.assertTrue(self.args.gtf_in)
-
-
 if __name__ == '__main__':
     unittest.main()

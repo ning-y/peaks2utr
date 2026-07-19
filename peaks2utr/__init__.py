@@ -175,6 +175,7 @@ async def _main(args):
             call_peaks(bam_basename, "forward"),
             call_peaks(bam_basename, "reverse")
         )
+        args.gtf_in = db.dialect['fmt'] == 'gtf'
         peaks = \
             BroadPeaksList(broadpeak_fn=cached("forward_peaks.broadPeak"), strand="forward") + \
             BroadPeaksList(broadpeak_fn=cached("reverse_peaks.broadPeak"), strand="reverse")
