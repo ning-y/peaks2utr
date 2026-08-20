@@ -7,6 +7,8 @@ import unittest
 
 import gffutils
 
+from peaks2utr.models import FeatureDB
+
 TEST_DIR = os.path.dirname(__file__)
 ROOT_DIR = os.path.join(TEST_DIR, "..")
 
@@ -39,7 +41,7 @@ class TestCreateDbWithCompressedInput(unittest.TestCase):
         gffutils.create_db(self.gtf_gz, db_path, force=True, merge_strategy="create_unique")
         self.assertTrue(os.path.isfile(db_path))
         self.assertGreater(os.path.getsize(db_path), 0)
-        db = gffutils.FeatureDB(db_path)
+        db = FeatureDB(db_path)
         # case3.no_parent.gtf has only exons; gffutils infers a gene from them.
         gene = db["ENSMUSG00000112145"]
         self.assertEqual(gene.featuretype, "gene")
@@ -50,7 +52,7 @@ class TestCreateDbWithCompressedInput(unittest.TestCase):
         gffutils.create_db(self.gff_gz, db_path, force=True, merge_strategy="create_unique")
         self.assertTrue(os.path.isfile(db_path))
         self.assertGreater(os.path.getsize(db_path), 0)
-        db = gffutils.FeatureDB(db_path)
+        db = FeatureDB(db_path)
         # Chr1.gff has an explicit protein_coding_gene feature with ID=C4B63_1g127.
         gene = db["C4B63_1g127"]
         self.assertEqual(gene.featuretype, "protein_coding_gene")
